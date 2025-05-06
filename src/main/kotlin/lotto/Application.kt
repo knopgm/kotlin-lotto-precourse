@@ -1,36 +1,52 @@
 package lotto
 
-fun main() {
-    val outputView = OutputView()
-    val inputView = InputView()
+val outputView = OutputView()
+val inputView = InputView()
 
-    // TODO: Implement the program
-    // First input read and checked
+fun callIntroAndBudget(): Int {
     outputView.printWelcomeMessage()
     val budget = inputView.readBudget()
-    val numberOfTickets = budget / 1000
 
-    // Tickets created, checked and printed
+    return budget
+}
+
+fun callTicketLogic(budget: Int):List<Lotto> {
+    val numberOfTickets = budget / 1000
     val ticketCreator = TicketGenerator()
     val ticketsList = ticketCreator.generateMultiples(numberOfTickets)
     outputView.printPurchasedTickets(numberOfTickets, ticketsList)
 
-    //Second input read and checked
+
+    return ticketsList
+}
+
+fun callWinningTicketLogic(ticketsList: List<Lotto>): List<TicketResults> {
     outputView.printWinningNumbersPrompt()
     val readWinningNumbers = inputView.readWinningNumbers()
-
-    //Third input (Create a bonusNumber input)
     outputView.printBonusNumberPrompt()
     val readBonusNumber = inputView.readBonusNumber()
-
-    //Logic to check for winnerTickets, match prizes and print
     outputView.printWinningStatisticsTitle()
     val ticketChecker = TicketChecker()
     val winningResults = ticketChecker.calculateTicketsResults(ticketsList, readWinningNumbers, readBonusNumber)
     outputView.printResults(winningResults)
 
-    //Logic to check profit rate
+    return winningResults
+}
+
+fun callProfitRateLogic(budget: Int, winningResults:List<TicketResults>) {
     val profitCalculator = ProfitCalculator()
     val profitRate = profitCalculator.calculate(budget, winningResults)
     outputView.printProfitRate(profitRate)
 }
+
+fun main() {
+    // First input read and checked
+    val budget = callIntroAndBudget()
+    // Second Tickets created, checked and printed
+    val ticketsList = callTicketLogic(budget)
+    // Third input read, checked and print winners
+    val winningResults = callWinningTicketLogic(ticketsList)
+    // Fourth check and print profit rate
+    callProfitRateLogic(budget, winningResults)
+}
+
